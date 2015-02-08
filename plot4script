@@ -1,0 +1,20 @@
+data<-read.table("household_power_consumption.txt", header = T, sep = ";")
+library(dplyr)
+data<-tbl_df(data)
+subsettedhpc<-filter(data, Date == "1/2/2007"|Date == "2/2/2007")
+datetime<-as.POSIXct(paste(subsettedhpc$Date, subsettedhpc$Time), format="%d/%m/%Y %H:%M:%S")
+#the code above reads the txt file for the assignment, and filters the data using dplyr so only 1/2/2007 and 2/2/2007
+#show up as the dates.  It also creates a variable of only date/time classes to plot the correct data on the x-axis.
+
+png(filename = "plot4.png")
+par(mfrow = c(2,2))
+par(mar = c(4,4,4,4))
+plot(datetime, subsettedhpc$Global_active_power, type = "l", xlab = "", ylab = "Global Active Power (kilowatts)")
+plot(datetime, subsettedhpc$Voltage, type = "l", xlab = "datetime", ylab = "Voltage")
+plot(datetime, subsettedhpc$Sub_metering_1, xlab = "", ylab = "Energy sub metering", type = "l")
+lines(datetime, subsettedhpc$Sub_metering_2, xlab = "", ylab = "Energy sub metering", col = "red")
+lines(datetime, subsettedhpc$Sub_metering_3, xlab = "", ylab = "Energy sub metering", col = "blue")
+legend("topright", pch = "-", col = c("black", "red", "blue"), legend = c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), cex = .8)
+plot(datetime, subsettedhpc$Global_reactive_power, type = "l", xlab = "datetime", ylab = "Global_reactive_power")
+dev.off()
+#the code above creates the png file for the data
